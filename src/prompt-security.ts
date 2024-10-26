@@ -1,14 +1,14 @@
-import axios from "axios";
-import { z } from "zod";
-import { ApiResponse, ProtectResult } from "./types/responses";
+import axios from 'axios';
+import { z } from 'zod';
+import { ApiResponse, ProtectResult } from './types/responses';
 import {
   ProtectPromptRequest,
   ProtectResponseRequest,
   ProtectMultiplePromptsRequest,
-} from "./types/requests";
-import { PromptSecurityConfig } from "./types/config";
-import { PromptSecurityError } from "./errors";
-import { toApiRequest, transformApiResponse } from "./utils/transform";
+} from './types/requests';
+import { PromptSecurityConfig } from './types/config';
+import { PromptSecurityError } from './errors';
+import { toApiRequest, transformApiResponse } from './utils/transform';
 
 export class PromptSecurity {
   private readonly appId: string;
@@ -17,14 +17,14 @@ export class PromptSecurity {
 
   constructor(config: PromptSecurityConfig) {
     if (!config.appId) {
-      throw new PromptSecurityError("appId is required");
+      throw new PromptSecurityError('appId is required');
     }
 
     if (
       !config.endpoint ||
       !z.string().url().safeParse(config.endpoint).success
     ) {
-      throw new PromptSecurityError("endpoint must be a valid url");
+      throw new PromptSecurityError('endpoint must be a valid url');
     }
 
     this.appId = config.appId;
@@ -39,16 +39,16 @@ export class PromptSecurity {
         toApiRequest(data),
         {
           headers: {
-            "APP-ID": this.appId,
-            "Content-Type": "application/json",
+            'APP-ID': this.appId,
+            'Content-Type': 'application/json',
           },
           timeout: this.timeout,
         }
       );
 
-      if (response.data.status === "failed") {
+      if (response.data.status === 'failed') {
         throw new PromptSecurityError(
-          response.data.reason || "API request failed"
+          response.data.reason || 'API request failed'
         );
       }
 
@@ -60,7 +60,7 @@ export class PromptSecurity {
       }
 
       throw new PromptSecurityError(
-        error instanceof Error ? error.message : "Request failed"
+        error instanceof Error ? error.message : 'Request failed'
       );
     }
   }

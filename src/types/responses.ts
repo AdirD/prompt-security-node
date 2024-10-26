@@ -1,4 +1,4 @@
-export type ProtectAction = "log" | "block" | "modify";
+export type ProtectAction = 'log' | 'block' | 'modify';
 
 export interface ProtectResult {
   action: ProtectAction;
@@ -10,7 +10,7 @@ export interface ProtectResult {
 }
 
 export interface ApiResponse {
-  status: "success" | "failed";
+  status: 'success' | 'failed';
   reason: string | null;
   result?: {
     conversation_id: string;

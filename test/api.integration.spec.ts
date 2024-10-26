@@ -8,17 +8,17 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('PromptSecurity Client Integration', () => {
   const mockSuccessResponse: ApiResponse = {
-      status: 'success',
-      reason: null,
-      result: {
-        conversation_id: '123',
-        latency: 100,
-        prompt_response_id: '456',
-        prompt: {
-          action: 'modify',
-          violations: ['test violation'],
-          modified_text: 'modified content',
-        },
+    status: 'success',
+    reason: null,
+    result: {
+      conversation_id: '123',
+      latency: 100,
+      prompt_response_id: '456',
+      prompt: {
+        action: 'modify',
+        violations: ['test violation'],
+        modified_text: 'modified content',
+      },
     },
   };
 
