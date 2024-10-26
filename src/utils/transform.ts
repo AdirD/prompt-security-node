@@ -1,5 +1,5 @@
 import { ApiResponse, ProtectResult } from '../types/responses';
-import { PromptSecurityError, ErrorCode } from '../errors';
+import { PromptSecurityError } from '../errors';
 
 export const toApiRequest = <T extends Record<string, any>>(data: T): Record<string, any> => {
   return Object.entries(data).reduce((acc, [key, value]) => {
@@ -13,7 +13,6 @@ export const transformApiResponse = (apiResponse: ApiResponse): ProtectResult =>
   if (apiResponse.status === 'failed' || !apiResponse.result) {
     throw new PromptSecurityError(
       apiResponse.reason || 'API request failed',
-      ErrorCode.UNEXPECTED_ERROR
     );
   }
 

@@ -15,7 +15,7 @@ dotenv.config();  // Add this at the top
 describe.skip('Debug: PromptSecurity API', () => {
   const client = new PromptSecurity({
     appId: 'your-app-id',  // 👈 Replace with your APP-ID
-    // endpoint: process.env.PROMPT_SECURITY_ENDPOINT, // Optional: customize endpoint
+    endpoint: 'https://eu.prompt.security',
     // timeout: 5000, // Optional: customize timeout
   });
 

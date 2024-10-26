@@ -1,36 +1,29 @@
-import { z } from 'zod';
+export interface PromptMetadata {
+  user?: string;
+  userGroups?: string[];
+  conversationId?: string;
+  policyName?: string;
+  monitorOnly?: boolean;
+  ipAddress?: string;
+  country?: string;
+  llmModel?: string;
+}
 
-export const PromptMetadataSchema = z.object({
-  user: z.string().optional(),
-  userGroups: z.array(z.string()).optional(),
-  conversationId: z.string().optional(),
-  policyName: z.string().optional(),
-  monitorOnly: z.boolean().optional(),
-  ipAddress: z.string().optional(),
-  country: z.string().optional(),
-  llmModel: z.string().optional(),
-});
+export interface BaseRequest {
+  systemPrompt?: string;
+  metadata?: PromptMetadata;
+}
 
-export const BaseRequestSchema = z.object({
-  systemPrompt: z.string().optional(),
-  metadata: PromptMetadataSchema.optional(),
-});
+export interface ProtectPromptRequest extends BaseRequest {
+  prompt: string;
+}
 
-export const ProtectPromptRequestSchema = BaseRequestSchema.extend({
-  prompt: z.string(),
-});
+export interface ProtectResponseRequest {
+  response: string;
+  promptResponseId?: string;
+  metadata?: PromptMetadata;
+}
 
-export const ProtectResponseRequestSchema = z.object({
-  response: z.string(),
-  promptResponseId: z.string().optional(),
-  metadata: PromptMetadataSchema.optional(),
-});
-
-export const ProtectMultiplePromptsRequestSchema = BaseRequestSchema.extend({
-  prompts: z.array(z.string()).min(1),
-});
-
-export type PromptMetadata = z.infer<typeof PromptMetadataSchema>;
-export type ProtectPromptRequest = z.infer<typeof ProtectPromptRequestSchema>;
-export type ProtectResponseRequest = z.infer<typeof ProtectResponseRequestSchema>;
-export type ProtectMultiplePromptsRequest = z.infer<typeof ProtectMultiplePromptsRequestSchema>;
+export interface ProtectMultiplePromptsRequest extends BaseRequest {
+  prompts: string[];
+}

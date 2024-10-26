@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { PromptSecurity } from '../src/prompt-security';
-import { ProtectActions } from '../src/constants';
-import { PromptSecurityError, ErrorCode } from '../src/errors';
+import { ApiResponse } from '../src/types/responses';
+import { PromptSecurityError } from '../src/errors';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('PromptSecurity Client Integration', () => {
-  const mockSuccessResponse = {
-    data: {
+  const mockSuccessResponse: ApiResponse = {
       status: 'success',
       reason: null,
       result: {
@@ -20,7 +19,6 @@ describe('PromptSecurity Client Integration', () => {
           violations: ['test violation'],
           modified_text: 'modified content',
         },
-      },
     },
   };
 
@@ -45,7 +43,7 @@ describe('PromptSecurity Client Integration', () => {
 
     describe('protectPrompt', () => {
       it('sends correct request format', async () => {
-        mockedAxios.post.mockResolvedValueOnce(mockSuccessResponse);
+        mockedAxios.post.mockResolvedValueOnce( { data: mockSuccessResponse });
 
         await client.protectPrompt({
           prompt: 'Test prompt',
@@ -74,7 +72,7 @@ describe('PromptSecurity Client Integration', () => {
       });
 
       it('returns properly transformed response', async () => {
-        mockedAxios.post.mockResolvedValueOnce(mockSuccessResponse);
+        mockedAxios.post.mockResolvedValueOnce({ data: mockSuccessResponse });
 
         const result = await client.protectPrompt({
           prompt: 'Test prompt',
@@ -152,8 +150,6 @@ describe('PromptSecurity Client Integration', () => {
         prompt: 'test',
       })).rejects.toThrow(new PromptSecurityError(
         'Request timed out',
-        ErrorCode.TIMEOUT,
-        expect.anything()
       ));
     });
 
