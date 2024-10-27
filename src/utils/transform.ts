@@ -1,5 +1,5 @@
 import { ApiResponse, ProtectResult } from '../types/responses';
-import { PromptSecurityError } from '../errors';
+import { PromptSecurityAPIError } from '../errors';
 
 export const toApiRequest = <T extends Record<string, any>>(data: T): Record<string, any> => {
   return Object.entries(data).reduce((acc, [key, value]) => {
@@ -11,17 +11,17 @@ export const toApiRequest = <T extends Record<string, any>>(data: T): Record<str
 
 export const transformApiResponse = (apiResponse: ApiResponse): ProtectResult => {
   if (apiResponse.status === 'failed' || !apiResponse.result) {
-    throw new PromptSecurityError(
+    throw new PromptSecurityAPIError(
       apiResponse.reason || 'API request failed',
     );
   }
 
   return {
-    action: apiResponse.result.prompt.action,
-    violations: apiResponse.result.prompt.violations,
-    modifiedText: apiResponse.result.prompt.modified_text,
-    conversationId: apiResponse.result.conversation_id,
-    latency: apiResponse.result.latency,
-    requestId: apiResponse.result.prompt_response_id,
+    action: apiResponse?.result?.prompt?.action,
+    violations: apiResponse?.result?.prompt?.violations,
+    modifiedText: apiResponse?.result?.prompt?.modified_text,
+    conversationId: apiResponse?.result?.conversation_id,
+    latency: apiResponse?.result?.latency,
+    requestId: apiResponse?.result?.prompt_response_id,
   };
 };

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { z } from 'zod';
 import { ApiResponse, ProtectResult } from './types/responses';
 import {
@@ -7,7 +7,7 @@ import {
   ProtectMultiplePromptsRequest,
 } from './types/requests';
 import { PromptSecurityConfig } from './types/config';
-import { PromptSecurityError } from './errors';
+import { PromptSecurityAPIError, PromptSecurityError, PromptSecurityTimeoutError } from './errors';
 import { toApiRequest, transformApiResponse } from './utils/transform';
 
 export class PromptSecurity {
@@ -28,7 +28,7 @@ export class PromptSecurity {
     }
 
     this.appId = config.appId;
-    this.endpoint = config.endpoint;
+    this.endpoint = new URL('/api/protect', config.endpoint).toString();
     this.timeout = config.timeout || 3000;
   }
 
@@ -46,22 +46,18 @@ export class PromptSecurity {
         }
       );
 
-      if (response.data.status === 'failed') {
-        throw new PromptSecurityError(
-          response.data.reason || 'API request failed'
-        );
-      }
-
       return transformApiResponse(response.data);
-    } catch (error) {
-      // TODO: more information about structure of errors from Prompt Security
-      if (error instanceof PromptSecurityError) {
+    } catch (error: any) {
+      // TODO: Need more examples of how the REST API fails to determine the error message
+      if (error instanceof PromptSecurityAPIError) {
         throw error;
       }
 
-      throw new PromptSecurityError(
-        error instanceof Error ? error.message : 'Request failed'
-      );
+      if (error.code === 'ECONNABORTED') {
+        throw new PromptSecurityTimeoutError(error.message);
+      }
+
+      throw new PromptSecurityError( error.message );
     }
   }
 
