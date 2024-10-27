@@ -4,10 +4,11 @@ import { ProtectRequest, ProtectType } from '../types/requests';
 
 export const toApiRequest = (data: ProtectRequest) => {
   const { metadata, ...rest } = data;
-  return objectToSnake({
+  const adaptedData = objectToSnake({
     ...rest,
     ...metadata
   });
+  return adaptedData;
 };
 
 export const fromApiResponse = (apiResponse: ApiResponse, protectType: ProtectType): ProtectResult => {

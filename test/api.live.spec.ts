@@ -9,13 +9,22 @@ describe('Live: PromptSecurity API', () => {
     endpoint: process.env.PROMPT_SECURITY_ENDPOINT as string,
   });
 
-  it.only('debug protect prompt', async () => {
-    const result = await client.protectPrompt({
+  it('debug protect prompt', async () => {
+    const resultRequest = await client.protectPrompt({
       prompt: 'Your test prompt here',
       systemPrompt: 'Optional system prompt',
     });
+    const resultResponse = await client.protectResponse({
+      response: 'Your test prompt here',
+      systemPrompt: 'Optional system prompt',
+      metadata: {
+        promptResponseId: resultRequest.promptResponseId,
+      }
+    });
 
-    console.log('Protect Prompt Result:', JSON.stringify(result, null, 2));
+
+    console.log('Protect Prompt Result:', JSON.stringify(resultResponse, null, 2));
+    console.log('Protect Prompt Request Result:', JSON.stringify(resultRequest, null, 2));
   });
 
   it('debug protect response', async () => {
