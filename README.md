@@ -54,8 +54,8 @@ try {
       // Output: Content blocked: ["Prompt Injection Violetion"]
       break;
     case 'log':
-      console.log('Request ID:', result.requestId);
-      // Output: Request ID: "some-request-id"
+      console.log('Message Id:', result.promptResponseId);
+      // Output: Message Id: "generated-message-id"
       break;
   }
 } catch (error) {
@@ -90,6 +90,7 @@ const result = await client.protectPrompt({
   prompt: string;           // [Required] The prompt text to be scanned for security threats
   systemPrompt?: string;    // [Optional] The system prompt/instructions to be used with the prompt
   metadata?: {              // [Optional] Additional context for the protection request
+    promptResponseId: string;      // [Optional] (string): UUID for a single prompt/response pair. If not given, it'll be automatically created and returned in the response
     user?: string;          // [Optional] User associated with the message (e.g., "john@doe.com")
     userGroups?: string[];  // [Optional] User groups associated with the message (e.g., ["admin", "rnd"])
     conversationId?: string;// [Optional] UUID for all prompts/responses in the same conversation. If not provided, 
@@ -110,12 +111,7 @@ Process multiple prompts in a single request. This is mutually exclusive with th
 
 ```typescript
 const result = await client.protectMultiplePrompts({
-  prompts: string[];        // [Required] Array of prompt texts to be protected. Each prompt will be 
-                           // individually scanned for security threats
-  systemPrompt?: string;    // [Optional] A shared system prompt/instructions to be applied to all prompts
-  metadata?: {              // [Optional] Shared context that applies to all prompts in the batch
-    // Same options as protectPrompt() metadata, applied to all prompts in the batch
-  }
+  prompts: string[];        // [Required] Array of prompt texts to be protected. Each prompt will be individually scanned for security threats
 });
 ```
 
@@ -126,12 +122,27 @@ Validate an LLM response text for security threats. Can be linked to a previous 
 ```typescript
 const result = await client.protectResponse({
   response: string;          // [Required] The LLM-generated response text to be validated
-  promptResponseId?: string; // [Optional] UUID linking this response to a previous prompt request.
-                            // Helps maintain conversation context and tracking
-  metadata?: {              // [Optional] Additional context for the response validation
-    // Same options as protectPrompt() metadata
-  }
 });
+```
+
+### Request Structure
+
+```typescript
+// Base request structure for all protection requests
+interface BaseRequest {
+  systemPrompt?: string;    // [Optional] The system prompt text
+  metadata?: {
+    promptResponseId?: string;     // [Optional] (string): UUID for a single prompt/response pair. If not given, it'll be automatically created and returned in the response
+    user?: string;          // [Optional] (string): User associated with the message
+    userGroups?: string[];  // [Optional] (array of string): User groups associated with the message
+    conversationId?: string;// [Optional] (string): UUID for all prompts/responses in the same conversation. If not given, it'll be automatically created and returned in the response
+    policyName?: string;    // [Optional] (string): The policy name to use
+    monitorOnly?: boolean;  // [Optional] Detect or Prevent
+    ipAddress?: string;     // [Optional] The IP address of the end user
+    country?: string;       // [Optional] The country of the end user
+    llmModel?: string;      // [Optional] The name of the model used
+  }
+}
 ```
 
 ### Response Structure
@@ -140,17 +151,12 @@ All protection methods return a simplified `ProtectResult` that focuses on the m
 
 ```typescript
 interface ProtectResult {
-  action: 'log' | 'block' | 'modify'; // [Required] Suggested action: 
-                                     // - 'log': Content is safe, proceed normally
-                                     // - 'block': Content violates policies, should be blocked
-                                     // - 'modify': Content was modified to be safe
-  violations: string[] | null;        // [Optional] List of scanners that detected violations
-                                     // (e.g., ["Prompt Injection LLM Judger", "Secrets"])
-  modifiedText: string | null;        // [Optional] Sanitized/modified version of the input text
-                                     // Only present when action is 'modify'
-  conversationId: string;             // [Required] UUID linking all related prompts/responses
-  latency: number;                    // [Required] Total processing time in milliseconds
-  requestId: string;                  // [Required] UUID for this specific request
+  action: 'log' | 'block' | 'modify'; // [Mandatory] (string): Suggested action: 'log', 'block' or 'modify'
+  violations: string[] | null;        // [Optional] (array of strings): Scanners that returned an invalid verdict (e.g., ["Prompt Injection LLM Judger", "Secrets"])
+  modifiedText: string | null;        // [Optional] (string): Modified text, if text was sanitized, only present if action is 'modify'
+  conversationId: string;             // [Optional] (string): UUID for all prompts/responses in the same conversation. If you are sending more prompts/responses related to the same conversation, please use this id.
+  latency: number;                    //  [Mandatory] (integer): Latency in milliseconds
+  promptResponseId: string;                  //  [Optional] (string): originally 'prompt_response_id' - UUID for a single prompt/response pair. If you are sending the response of the prompt in another request, please use this id.
   raw: ApiResponse;                   // [Required] Complete API response containing additional fields:
                                      // - Detailed scanner findings
                                      // - Individual scanner scores and thresholds
