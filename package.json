@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
@@ -23,8 +25,19 @@
     "ai",
     "protection"
   ],
-  "author": "AdirD",
+  "author": {
+    "name": "AdirD",
+    "url": "https://github.com/AdirD"
+  },
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdirD/prompt-security-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdirD/prompt-security-node/issues"
+  },
+  "homepage": "https://github.com/AdirD/prompt-security-node#readme",
   "dependencies": {
     "axios": "^1.6.7",
     "ts-case-convert": "^2.1.0",
