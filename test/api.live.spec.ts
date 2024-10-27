@@ -2,14 +2,14 @@ import { PromptSecurity } from '../src/prompt-security';
 import dotenv from 'dotenv';
 dotenv.config();
 
-describe.skip('Live: PromptSecurity API', () => {
+describe('Live: PromptSecurity API', () => {
   // 👇 Replace with your own settings
   const client = new PromptSecurity({
     appId: process.env.PROMPT_SECURITY_APP_ID as string,
     endpoint: process.env.PROMPT_SECURITY_ENDPOINT as string,
   });
 
-  it('debug protect prompt', async () => {
+  it.only('debug protect prompt', async () => {
     const result = await client.protectPrompt({
       prompt: 'Your test prompt here',
       systemPrompt: 'Optional system prompt',

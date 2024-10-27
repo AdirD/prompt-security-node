@@ -1,5 +1,5 @@
 export interface PromptSecurityConfig {
   appId: string;
-  endpoint?: string;
+  endpoint: string;
   timeout?: number;
 }
