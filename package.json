@@ -1,6 +1,6 @@
 {
   "name": "prompt-security-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unofficial Node.js SDK for Prompt Security Protection Service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
