@@ -1,6 +1,5 @@
 import { toApiRequest, fromApiResponse } from '../src/utils/transform';
 import { ApiResponse } from '../src/types/responses';
-import { PromptSecurityAPIError } from '../src/errors';
 import { ProtectPromptRequest, ProtectMultiplePromptsRequest } from '../src/types/requests';
 
 describe('Transform Utils', () => {
@@ -97,7 +96,7 @@ describe('Transform Utils', () => {
     };
 
     it('transforms successful response with all fields', () => {
-      const result = fromApiResponse(mockSuccessResponse);
+      const result = fromApiResponse(mockSuccessResponse, 'prompt');
 
       expect(result).toEqual({
         action: 'modify',
@@ -121,48 +120,22 @@ describe('Transform Utils', () => {
           prompt: {
             action: 'log',
             violations: [],
-            modified_text: undefined,
+            modified_text: null,
           },
         },
       };
 
-      const result = fromApiResponse(response);
+      const result = fromApiResponse(response, 'prompt');
 
       expect(result).toEqual({
         action: 'log',
         violations: [],
-        modifiedText: undefined,
+        modifiedText: null,
         conversationId: '123',
         latency: 100,
         requestId: '456',
         raw: response,
       });
-    });
-
-    it('throws PromptSecurityAPIError for failed status', () => {
-      const failedResponse: ApiResponse = {
-        status: 'failed',
-        reason: 'Invalid request',
-        result: undefined,
-      };
-
-      expect(() => fromApiResponse(failedResponse))
-        .toThrow(PromptSecurityAPIError);
-      expect(() => fromApiResponse(failedResponse))
-        .toThrow('Invalid request');
-    });
-
-    it('throws PromptSecurityAPIError for missing result', () => {
-      const nullResponse: ApiResponse = {
-        status: 'success',
-        reason: null,
-        result: undefined,
-      };
-
-      expect(() => fromApiResponse(nullResponse))
-        .toThrow(PromptSecurityAPIError);
-      expect(() => fromApiResponse(nullResponse))
-        .toThrow('API request failed');
     });
   });
 });

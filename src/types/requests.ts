@@ -1,3 +1,5 @@
+export type ProtectType = 'prompt' | 'response' | 'prompts';
+
 export interface PromptMetadata {
   user?: string;
   userGroups?: string[];

@@ -33,7 +33,7 @@ export class PromptSecurity {
     this.timeout = config.timeout || 3000;
   }
 
-  private async makeRequest(data: ProtectRequest): Promise<ProtectResult> {
+  private async makeRequest(data: ProtectRequest): Promise<ApiResponse> {
     try {
       const response = await axios.post<ApiResponse>(
         this.endpoint,
@@ -47,9 +47,15 @@ export class PromptSecurity {
         }
       );
 
-      return fromApiResponse(response.data);
+      if (response.data.status === 'failed' || !response.data.result) {
+        throw new PromptSecurityAPIError(
+          response.data.reason || 'API request failed',
+        );
+      }
+
+      return response.data;
     } catch (error: any) {
-      // TODO: Need more examples of how the REST API fails to determine the error message
+      // TODO: Need more examples from PS to determine how to handle different errors
       if (error instanceof PromptSecurityAPIError) {
         throw error;
       }
@@ -63,14 +69,17 @@ export class PromptSecurity {
   }
 
   async protectPrompt(request: ProtectPromptRequest): Promise<ProtectResult> {
-    return this.makeRequest(request);
-  }
-
-  async protectResponse( request: ProtectResponseRequest ): Promise<ProtectResult> {
-    return this.makeRequest(request);
+    const apiResponse = await this.makeRequest(request);
+    return fromApiResponse(apiResponse, 'prompt');
   }
 
   async protectMultiplePrompts( request: ProtectMultiplePromptsRequest ): Promise<ProtectResult> {
-    return this.makeRequest(request);
+    const apiResponse = await this.makeRequest(request);
+    return fromApiResponse(apiResponse, 'prompt');
+  }
+
+  async protectResponse( request: ProtectResponseRequest ): Promise<ProtectResult> {
+    const apiResponse = await this.makeRequest(request);
+    return fromApiResponse(apiResponse, 'response');
   }
 }
