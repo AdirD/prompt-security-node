@@ -21,7 +21,9 @@ describe('Live: PromptSecurity API', () => {
   it('debug protect response', async () => {
     const result = await client.protectResponse({
       response: 'Your test response here',
-      promptResponseId: 'optional-previous-prompt-id',
+      metadata: {
+        promptResponseId: 'optional-previous-prompt-id',
+      }
     });
 
     console.log('Protect Response Result:', JSON.stringify(result, null, 2));

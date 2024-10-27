@@ -102,7 +102,7 @@ describe('PromptSecurity Client Integration', () => {
         action: 'modify',
         conversationId: '123',
         latency: 100,
-        requestId: '456',
+        promptResponseId: '456',
         violations: ['test violation'],
         modifiedText: 'modified content',
         raw: mockSuccessResponse,
@@ -118,8 +118,8 @@ describe('PromptSecurity Client Integration', () => {
 
       await client.protectResponse({
         response: 'Test response',
-        promptResponseId: 'prev-123',
         metadata: {
+          promptResponseId: 'prev-123',
           user: 'test-user',
         },
       });

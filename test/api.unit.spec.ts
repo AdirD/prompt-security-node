@@ -104,7 +104,7 @@ describe('Transform Utils', () => {
         modifiedText: 'modified content',
         conversationId: '123',
         latency: 100,
-        requestId: '456',
+        promptResponseId: '456',
         raw: mockSuccessResponse,
       });
     });
@@ -133,7 +133,7 @@ describe('Transform Utils', () => {
         modifiedText: null,
         conversationId: '123',
         latency: 100,
-        requestId: '456',
+        promptResponseId: '456',
         raw: response,
       });
     });

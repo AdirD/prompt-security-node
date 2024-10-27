@@ -18,7 +18,7 @@ export const fromApiResponse = (apiResponse: ApiResponse, protectType: ProtectTy
     modifiedText: apiResponse?.result?.[protectType]?.modified_text ?? null,
     conversationId: apiResponse?.result?.conversation_id,
     latency: apiResponse?.result?.latency,
-    requestId: apiResponse?.result?.prompt_response_id,
+    promptResponseId: apiResponse?.result?.prompt_response_id,
     raw: apiResponse,
   };
 };
