@@ -27,3 +27,9 @@ export interface ProtectResponseRequest {
 export interface ProtectMultiplePromptsRequest extends BaseRequest {
   prompts: string[];
 }
+
+export type ProtectRequest = 
+  | ProtectPromptRequest 
+  | ProtectResponseRequest 
+  | ProtectMultiplePromptsRequest;
+

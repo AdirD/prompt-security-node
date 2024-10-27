@@ -103,6 +103,7 @@ describe('PromptSecurity Client Integration', () => {
                 requestId: '456',
                 violations: ['test violation'],
                 modifiedText: 'modified content',
+                raw: mockSuccessResponse,
             });
         });
     });

@@ -7,6 +7,7 @@ export interface ProtectResult {
   requestId: string;
   violations?: string[];
   modifiedText?: string;
+  raw: any;
 }
 
 export interface ApiResponse {

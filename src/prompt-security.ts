@@ -1,14 +1,15 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import { z } from 'zod';
 import { ApiResponse, ProtectResult } from './types/responses';
 import {
   ProtectPromptRequest,
   ProtectResponseRequest,
   ProtectMultiplePromptsRequest,
+  ProtectRequest,
 } from './types/requests';
 import { PromptSecurityConfig } from './types/config';
 import { PromptSecurityAPIError, PromptSecurityError, PromptSecurityTimeoutError } from './errors';
-import { toApiRequest, transformApiResponse } from './utils/transform';
+import { toApiRequest, fromApiResponse } from './utils/transform';
 
 export class PromptSecurity {
   private readonly appId: string;
@@ -32,7 +33,7 @@ export class PromptSecurity {
     this.timeout = config.timeout || 3000;
   }
 
-  private async makeRequest(data: Record<string, any>): Promise<ProtectResult> {
+  private async makeRequest(data: ProtectRequest): Promise<ProtectResult> {
     try {
       const response = await axios.post<ApiResponse>(
         this.endpoint,
@@ -46,7 +47,7 @@ export class PromptSecurity {
         }
       );
 
-      return transformApiResponse(response.data);
+      return fromApiResponse(response.data);
     } catch (error: any) {
       // TODO: Need more examples of how the REST API fails to determine the error message
       if (error instanceof PromptSecurityAPIError) {
@@ -62,36 +63,14 @@ export class PromptSecurity {
   }
 
   async protectPrompt(request: ProtectPromptRequest): Promise<ProtectResult> {
-    const requestData = {
-      prompt: request.prompt,
-      systemPrompt: request.systemPrompt,
-      ...request.metadata,
-    };
-
-    return this.makeRequest(requestData);
+    return this.makeRequest(request);
   }
 
-  async protectResponse(
-    request: ProtectResponseRequest
-  ): Promise<ProtectResult> {
-    const requestData = {
-      response: request.response,
-      promptResponseId: request.promptResponseId,
-      ...request.metadata,
-    };
-
-    return this.makeRequest(requestData);
+  async protectResponse( request: ProtectResponseRequest ): Promise<ProtectResult> {
+    return this.makeRequest(request);
   }
 
-  async protectMultiplePrompts(
-    request: ProtectMultiplePromptsRequest
-  ): Promise<ProtectResult> {
-    const requestData = {
-      prompts: request.prompts,
-      systemPrompt: request.systemPrompt,
-      ...request.metadata,
-    };
-
-    return this.makeRequest(requestData);
+  async protectMultiplePrompts( request: ProtectMultiplePromptsRequest ): Promise<ProtectResult> {
+    return this.makeRequest(request);
   }
 }
