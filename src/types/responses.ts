@@ -4,7 +4,7 @@ export interface ProtectResult {
   action: Action;
   conversationId: string;
   latency: number;
-  requestId: string;
+  promptResponseId: string;
   violations: string[] | null;
   modifiedText: string | null;
   raw: any;
@@ -18,13 +18,13 @@ export interface ApiResponse {
     latency: number;
     prompt_response_id: string;
     // TODO: Break down the ApiResponse per the different request
-    prompt?: ActionData;
-    response?: ActionData;
-    prompts?: ActionData;
+    prompt?: ProtectResultScanners;
+    response?: ProtectResultScanners;
+    prompts?: ProtectResultScanners;
   };
 }
 
-export interface ActionData {
+export interface ProtectResultScanners {
   action: Action;
   violations: string[] | null;
   modified_text: string | null;
