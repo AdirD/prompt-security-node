@@ -242,13 +242,10 @@ npm run lint
 ```bash
 # Login to npm
 npm login
+# Run build
+npm run build
 # Update version
-npm version patch  # for bug fixes (X.X.1)
-# or
-npm version minor  # for new features (X.1.X)
-# or
-npm version major  # for breaking changes (1.X.X)
-
+npm version patch / minor / major  # bug fixes (X.X.1) new features (X.1.X) breaking changes (1.X.X)
 # Publish to npm
 npm publish
 ```
