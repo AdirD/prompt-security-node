@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 describe('Live: PromptSecurity API', () => {
-  // 👇 Replace with your own settings
+  // 👇 Replace with your own settings or create a .env with the secrets
   const client = new PromptSecurity({
     appId: process.env.PROMPT_SECURITY_APP_ID as string,
     endpoint: process.env.PROMPT_SECURITY_ENDPOINT as string,

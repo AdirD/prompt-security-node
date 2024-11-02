@@ -237,19 +237,6 @@ npm run build
 npm run lint
 ```
 
-## Publish
-
-```bash
-# Login to npm
-npm login
-# Run build
-npm run build
-# Update version
-npm version patch / minor / major  # bug fixes (X.X.1) new features (X.1.X) breaking changes (1.X.X)
-# Publish to npm
-npm publish
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
