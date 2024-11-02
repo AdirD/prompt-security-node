@@ -237,6 +237,40 @@ npm run build
 npm run lint
 ```
 
+## Release
+
+This package uses semantic versioning via commit messages:
+
+### Version Bumping Commits
+```bash
+# Patch Release (1.0.X)
+fix: message      # Bug fixes
+perf: message     # Performance improvements
+
+# Minor Release (1.X.0)
+feat: message     # New features
+
+# Major Release (X.0.0)
+feat!: message            # Breaking change
+fix!: message             # Breaking change
+BREAKING CHANGE: message  # Breaking change anywhere in the commit body
+```
+
+### Non-Version Bumping Commits
+Only these specific types are allowed:
+```bash
+build: message    # Changes to build system or dependencies
+chore: message    # Maintenance tasks
+ci: message       # CI configuration files and scripts
+docs: message     # Documentation only
+perf: message     # Performance improvements
+refactor: message # Neither fixes a bug nor adds a feature
+style: message    # Code style (formatting, semicolons, etc)
+test: message     # Adding or correcting tests
+```
+
+Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
